@@ -1,0 +1,192 @@
+{% raw %}
+<style>
+body {
+	font-family: 'Open Sans', sans-serif;
+	color: #fff;
+	font-size: 16px;
+	background: url("/images/body-bg.jpg") no-repeat fixed;
+	background-size: cover;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	margin: 0;
+	padding: 0;
+}
+
+#page-container {
+	width: 610px;
+	margin: 0 auto;
+	padding-bottom: 40px;
+}
+
+#title-area {
+	background: url("/images/logo.png") no-repeat left top;
+	height: 66px;
+	margin-top: 40px;
+}
+
+.left-column, .right-column {
+	width: 50%;
+	float: left;
+}
+
+#main-content {
+	border-top: 2px solid #fff;
+	clear: both;
+}
+
+a, a:hover, a:visited {
+	color: #0061af;
+}
+
+a, a:visited {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #1d1d1d;
+}
+
+.some-login .btn,
+.other-login .btn,
+.university-login .btn {
+	float: left;	
+	margin-right: 10px;
+	margin-bottom: 10px;
+	background-color: #fff;
+	min-height: 36px;
+}
+
+.btn {
+	background-color: #fff;
+}
+
+.btn p {
+	padding-right: 10px;
+	padding-top: 6px;
+	padding-bottom: 5px;
+	margin: 0;
+	color: #0061af;
+	background: #fff;
+}
+
+.facebook {
+	background: url("/images/buttons/btn-facebook.png") no-repeat;
+	padding-left: 40px;
+}
+
+.instagram {
+	background: url("/images/buttons/btn-instagram.png") no-repeat;
+	padding-left: 40px;
+}
+
+.windowslive {
+	background: url("/images/buttons/btn-windowslive.png") no-repeat;
+	padding-left: 40px;
+}
+
+.twitter {
+	background: url("/images/buttons/btn-twitter.png") no-repeat;
+	padding-left: 50px;
+}
+
+.google {
+	background: url("/images/buttons/btn-google-plus.png") no-repeat;
+	padding-left: 40px;
+}
+
+.linkedin {
+	background: url("/images/buttons/btn-linkedin.png") no-repeat;
+	padding-left: 100px;
+	margin-right: 0;
+}
+
+.yle {
+	background: url("/images/buttons/btn-yle.png") no-repeat;
+	padding-left: 40px;
+}
+
+.simulated {
+	background: url("/images/buttons/btn-simulated.png") no-repeat;
+	padding-left: 40px;
+}
+
+.dreamschool {
+	background: url("/images/buttons/btn-unelmakoulu.png") no-repeat;
+	padding-left: 50px;
+}
+
+.hyvinkaa {
+	background: url("/images/buttons/btn-hyvinkaa.png") no-repeat;
+	padding-left: 40px;
+}
+
+.hyvinkaa3 {
+	background: url("/images/buttons/btn-hyvinkaa3.png") no-repeat;
+	padding-left: 10px;
+        padding-right: 40px;
+}
+
+.hyvinkaa4 {
+	background: url("/images/buttons/btn-hyvinkaa4.png") no-repeat;
+	padding-left: 10px;
+        padding-right: 40px;
+}
+
+.hyvinkaa5 {
+	background: url("/images/buttons/btn-hyvinkaa5.png") no-repeat;
+	padding-left: 8px;
+        padding-right: 33px;
+}
+
+.oppijanavain {
+	background: url("/images/buttons/btn-oppijanavain.png") no-repeat;
+	padding-left: 60px;
+}
+
+.opinsys {
+	background: url("/images/buttons/btn-opinsys.png") no-repeat;
+	padding-left: 137px;
+	margin-right: 0;
+}
+
+.pedanet {
+	background: url("/images/buttons/btn-pedanet.png") no-repeat;
+	padding-left: 40px;
+	margin-right: 0;
+}
+
+.urjala {
+	background: url("/images/buttons/btn-urjala.png") no-repeat;
+	padding-left: 40px;
+	margin-right: 0;
+}
+
+.valkeakoski {
+	background: url("/images/buttons/btn-valkeakoski.png") no-repeat;
+	padding-left: 52px;
+	margin-right: 0;
+}
+
+.clear {clear: both;}
+
+@media only screen and (max-width: 627px) {
+	#page-container,
+	.left-column,
+	.right-column	{
+		width: 100%;
+	}
+	
+	#title-area {
+		background-position: center top !important;
+		margin-top: 20px;
+	}
+	
+	#content-container {
+		padding: 0 30px;
+	}
+	
+}
+</style>
+{% endraw %}

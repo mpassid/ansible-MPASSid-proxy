@@ -1,0 +1,7 @@
+{% raw %}
+<!doctype html>
+<!--[if lte IE 7]> <html lang="fi" itemtype="http://schema.org/WebPage" data-text-size="3" class="no-js text-size-3 lte_ie9 lte_ie8 lte7"> <![endif]-->
+<!--[if IE 8]> <html lang="fi" itemtype="http://schema.org/WebPage" data-text-size="3" class="no-js text-size-3 lte_ie9 lte_ie8 ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="fi" itemtype="http://schema.org/WebPage" data-text-size="3" class="no-js text-size-3 lte_ie9 ie9"> <![endif]-->
+<!--[if gt IE 9]><!--><html lang="fi" itemtype="http://schema.org/WebPage" data-text-size="3" class="no-js text-size-3"><!--<![endif]-->
+{% endraw %}

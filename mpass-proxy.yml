@@ -1,0 +1,11 @@
+- hosts: all
+  become: true
+  become_method: sudo
+  vars:
+    keystore_password: changemepl3453
+  roles:
+    - { role: cmprescott.xml }
+    - { role: CSCfi.jetty }
+    - { role: CSCfi.shibboleth-idp, configurables: ['consent','nameid'], scope: csc.fi, port: 8443, bport: 8444, keystore_password: changemepl3453 }
+    - { role: mpass-proxy }
+

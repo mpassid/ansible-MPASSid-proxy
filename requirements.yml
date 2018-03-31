@@ -1,0 +1,4 @@
+---
+- src: cmprescott.xml
+- src: CSCfi.jetty
+- src: CSCfi.shibboleth-idp

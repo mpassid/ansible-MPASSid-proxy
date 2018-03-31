@@ -1,0 +1,27 @@
+ #
+ # WARNING: Security Hazard keep this file encrypted all times in production
+ #
+ secure:
+   app_root: /opt
+   app_jetty: /opt/jetty
+   app_shibbo: /opt/shibboleth-idp
+   app_jetty_base: /opt/shibboleth-idp/jetty-base
+   mpassid_build: /opt/tmp
+   mpassid_data: https://127.0.0.1
+   shibboleth:      
+     conf: /opt/shibboleth-idp/conf
+     attribute_resolver:
+       hash: aaccvu654rrge43w2
+     idp_properties:
+       entityID: https://127.0.0.1/idp/shibboleth
+       authn_flows: "Disco|ShibMepin|ShibLdap"
+     conf_authn: /opt/shibboleth-idp/conf/authn
+     views: /opt/shibboleth-idp/views    
+     messages: /opt/shibboleth-idp/messages
+     flows_authn: /opt/shibboleth-idp/flows/authn
+     sp: /etc/shibboleth
+
+     
+
+
+

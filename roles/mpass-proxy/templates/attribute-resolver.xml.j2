@@ -1,0 +1,303 @@
+{% raw %}<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    This file is an EXAMPLE configuration file. While the configuration
+    presented in this example file is semi-functional, it isn't very
+    interesting. It is here only as a starting point for your deployment
+    process.
+    
+    Very few attribute definitions and data connectors are demonstrated,
+    and the data is derived statically from the logged-in username and a
+    static example connector.
+
+    Attribute-resolver-full.xml contains more examples of attributes,
+    encoders, and data connectors. Deployers should refer to the Shibboleth
+    documentation for a complete list of components and their options.
+-->
+<resolver:AttributeResolver
+        xmlns:resolver="urn:mace:shibboleth:2.0:resolver" 
+        xmlns:pc="urn:mace:shibboleth:2.0:resolver:pc"
+        xmlns:ad="urn:mace:shibboleth:2.0:resolver:ad" 
+        xmlns:dc="urn:mace:shibboleth:2.0:resolver:dc"
+        xmlns:enc="urn:mace:shibboleth:2.0:attribute:encoder" 
+        xmlns:sec="urn:mace:shibboleth:2.0:security"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ecaid="fi.okm.mpass.shibboleth.attribute.dc.authnid"
+        xmlns:eca="fi.okm.mpass.shibboleth.attribute.dc.rest"
+        xsi:schemaLocation="urn:mace:shibboleth:2.0:resolver http://shibboleth.net/schema/idp/shibboleth-attribute-resolver.xsd
+                            urn:mace:shibboleth:2.0:resolver:pc http://shibboleth.net/schema/idp/shibboleth-attribute-resolver-pc.xsd
+                            urn:mace:shibboleth:2.0:resolver:ad http://shibboleth.net/schema/idp/shibboleth-attribute-resolver-ad.xsd
+                            urn:mace:shibboleth:2.0:resolver:dc http://shibboleth.net/schema/idp/shibboleth-attribute-resolver-dc.xsd
+                            urn:mace:shibboleth:2.0:attribute:encoder http://shibboleth.net/schema/idp/shibboleth-attribute-encoder.xsd
+                            urn:mace:shibboleth:2.0:security http://shibboleth.net/schema/idp/shibboleth-security.xsd
+                            fi.okm.mpass.shibboleth.attribute.dc.authnid classpath:/eca-authnid-connector.xsd
+                            fi.okm.mpass.shibboleth.attribute.dc.rest classpath:/rest-connector.xsd">
+    <!-- ========================================== -->
+    <!--      Attribute Definitions                 -->
+    <!-- ========================================== -->
+
+    <!--
+    The EPPN is the "standard" federated username in higher ed.
+    For guidelines on the implementation of this attribute, refer
+    to the Shibboleth and eduPerson documentation. Above all, do
+    not expose a value for this attribute without considering the
+    long term implications. 
+    -->
+    <resolver:AttributeDefinition id="eduPersonPrincipalName" xsi:type="ad:Scoped" scope="%{idp.scope}" sourceAttributeID="uid">
+        <resolver:Dependency ref="uid" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML1ScopedString" name="urn:mace:dir:attribute-def:eduPersonPrincipalName" encodeType="false" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2ScopedString" name="urn:oid:1.3.6.1.4.1.5923.1.1.1.6" friendlyName="eduPersonPrincipalName" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="uid" xsi:type="ad:PrincipalName">
+        <resolver:AttributeEncoder xsi:type="enc:SAML1String" name="urn:mace:dir:attribute-def:uid" encodeType="false" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:oid:0.9.2342.19200300.100.1.1" friendlyName="uid" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="authnid" xsi:type="ad:Simple" sourceAttributeID="ecaauthnid">
+        <resolver:Dependency ref="calculateAuthnId" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:educloudalliance.org:authnID" friendlyName="authnid" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="ecausername" xsi:type="ad:Simple" sourceAttributeID="username">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:educloudalliance.org:OID" friendlyName="oid" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="ecafirstName" xsi:type="ad:Simple" sourceAttributeID="firstName">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:oid:2.5.4.42" friendlyName="givenName" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="ecasurname" xsi:type="ad:Simple" sourceAttributeID="surname">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:oid:2.5.4.4" friendlyName="sn" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="ecamunicipalities" xsi:type="ad:Simple" sourceAttributeID="municipalities">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:educloudalliance.org:municipality" friendlyName="ecaMunicipality" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="ecaschools" xsi:type="ad:Simple" sourceAttributeID="schools">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:educloudalliance.org:school" friendlyName="ecaSchool" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="ecagroups" xsi:type="ad:Simple" sourceAttributeID="groups">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:educloudalliance.org:group" friendlyName="ecaGroup" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="ecaroles" xsi:type="ad:Simple" sourceAttributeID="roles">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:educloudalliance.org:role" friendlyName="ecaRole" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="ecastructuredRoles" xsi:type="ad:Simple" sourceAttributeID="structuredRoles">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:educloudalliance.org:structuredRole" friendlyName="ecaStructuredRole" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="ecalegacyId" xsi:type="ad:Simple" sourceAttributeID="attr_legacyId">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:educloudalliance.org:legacyCryptId" friendlyName="ecaLegacyCryptId" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+<!--    <resolver:AttributeDefinition id="idp" xsi:type="ad:Script">
+        <resolver:Dependency ref="uid" />
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML1String" name="urn:mace:dir:attribute-def:idp" encodeType="false" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:TODO:idp" friendlyName="idp" encodeType="false" />
+        <ad:Script><![CDATA[
+authnContext = resolutionContext.getParent().getSubcontext("net.shibboleth.idp.authn.context.AuthenticationContext");
+shibContext = authnContext.getSubcontext("fi.okm.mpass.shibboleth.authn.context.ShibbolethAuthnContext");
+idp.addValue(shibContext.getIdp());
+//idp.addValue("testing");
+        ]]></ad:Script>
+    </resolver:AttributeDefinition>-->
+
+    <resolver:AttributeDefinition id="idpId" xsi:type="ad:Script">
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:educloudalliance.org:authenticator" friendlyName="idpId" encodeType="false" />
+        <ad:Script><![CDATA[
+authnContext = resolutionContext.getParent().getSubcontext("net.shibboleth.idp.authn.context.AuthenticationContext");
+authnResult = authnContext.getAuthenticationResult();
+if (authnResult != null) {
+    flowId = authnResult.getAuthenticationFlowId();
+    if (flowId.equals("authn/ShibLdap")) idpId.addValue("ldap_test");
+    else if (flowId.equals("authn/ShibMepin")) idpId.addValue("mepin");
+    else if (flowId.equals("authn/SocialUserYle")) idpId.addValue("yle");
+    else if (flowId.equals("authn/ShibDreamSchool")) idpId.addValue("dreamschool");
+    else if (flowId.equals("authn/SocialUserGoogle")) idpId.addValue("google");
+    else if (flowId.equals("authn/SocialUserGoogle2")) idpId.addValue("google");
+    else if (flowId.equals("authn/SocialUserLinkedIn")) idpId.addValue("linkedin");
+    else if (flowId.equals("authn/SocialUserTwitter")) idpId.addValue("twitter");
+    else if (flowId.equals("authn/SocialUserFacebook")) idpId.addValue("facebook");
+    else if (flowId.equals("authn/SocialUserLiveID")) idpId.addValue("windowslive");
+    else if (flowId.equals("authn/Opinsys")) idpId.addValue("opinsys_demo");
+    else if (flowId.equals("authn/Pedanet")) idpId.addValue("pedanet_demo");
+    else if (flowId.equals("authn/PedanetDev")) idpId.addValue("pedanet_dev");
+    else if (flowId.equals("authn/ShibStress")) idpId.addValue("ldap_test");
+    else if (flowId.equals("authn/ShibGafe")) idpId.addValue("gafe_test");
+    else if (flowId.equals("authn/ShibExternal")) idpId.addValue("ldap_test");
+    else if (flowId.equals("authn/SocialUserStress")) idpId.addValue("stresstest");
+    else if (flowId.equals("authn/SocialUserStress2")) idpId.addValue("stresstest");
+    else if (flowId.equals("authn/WTest")) idpId.addValue("wilma_demo");
+    else if (flowId.equals("authn/WilmaDemo")) idpId.addValue("wilma_demo2");
+    else if (flowId.equals("authn/WMultiTest")) {
+        idpId.addValue(authnContext.getAuthenticationStateMap().get("MPASS_SELECTED_TECH_ID"));
+    }
+}
+        ]]></ad:Script>
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="cide" xsi:type="ad:Script">
+        <resolver:Dependency ref="ecalegacyId" />
+        <ad:Script><![CDATA[
+algorithm = "HmacSHA256";
+mac = Java.type("javax.crypto.Mac").getInstance(algorithm);
+keySpecType = Java.type("javax.crypto.spec.SecretKeySpec");
+stringType = Java.type("java.lang.String");
+if (typeof ecalegacyId != "undefined" && ecalegacyId != null && ecalegacyId.getValues().size() > 0) {
+    key = new keySpecType(new stringType({% endraw %}"{{ secure.shibboleth.attribute_resolver.hash }}"{% raw %}).getBytes("UTF-8"), algorithm);
+    mac.init(key);
+    bytes = mac.doFinal(new stringType(ecalegacyId).getBytes("UTF-8"));
+    cide.addValue(new stringType(Java.type("org.apache.commons.codec.binary.Hex").encodeHex(bytes)));
+}
+        ]]></ad:Script>
+    </resolver:AttributeDefinition>
+
+    <!--
+    The uid is the closest thing to a "standard" LDAP attribute
+    representing a local username, but you should generally *never*
+    expose uid to federated services, as it is rarely globally unique.
+    -->
+    <resolver:AttributeDefinition id="uid" xsi:type="ad:PrincipalName">
+        <resolver:AttributeEncoder xsi:type="enc:SAML1String" name="urn:mace:dir:attribute-def:uid" encodeType="false" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:oid:0.9.2342.19200300.100.1.1" friendlyName="uid" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <!--
+    In the rest of the world, the email address is the standard identifier,
+    despite the problems with that practice. Consider making the EPPN
+    value the same as your official email addresses whenever possible.
+    -->
+<!--    <resolver:AttributeDefinition id="mpassLegacyCid" xsi:type="ad:Template">
+        <resolver:Dependency ref="ecalegacyId" />
+        <resolver:Dependency ref="idpId" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:legacyCryptId" encodeType="false" />
+        <ad:Template>
+          <![CDATA[
+               ${ecalegacyId}@${idpId}
+          ]]>
+        </ad:Template>
+        <ad:SourceAttribute>ecalegacyId</ad:SourceAttribute>
+        <ad:SourceAttribute>idpId</ad:SourceAttribute>
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="mpassLegacyCide" xsi:type="ad:Template">
+        <resolver:Dependency ref="cide" />
+        <resolver:Dependency ref="idpId" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:legacyCryptIde" encodeType="false" />
+        <ad:Template>
+          <![CDATA[
+               ${cide}@${idpId}
+          ]]>
+        </ad:Template>
+        <ad:SourceAttribute>cide</ad:SourceAttribute>
+        <ad:SourceAttribute>idpId</ad:SourceAttribute>
+    </resolver:AttributeDefinition>-->
+
+    <resolver:AttributeDefinition id="mpassLegacyCid" xsi:type="ad:Script">
+        <resolver:Dependency ref="ecalegacyId" />
+        <resolver:Dependency ref="idpId" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:legacyCryptId" encodeType="false" />
+        <ad:Script><![CDATA[
+if (ecalegacyId != "undefined" && ecalegacyId.getValues().size() > 0 && idpId != "undefined" && idpId.getValues().size() > 0) {
+    mpassLegacyCid.addValue(ecalegacyId.getValues().get(0) + "@" + idpId.getValues().get(0));
+}
+        ]]></ad:Script>
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="mpassLegacyCide" xsi:type="ad:Script">
+        <resolver:Dependency ref="cide" />
+        <resolver:Dependency ref="idpId" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:legacyCryptIde" encodeType="false" />
+        <ad:Script><![CDATA[
+if (cide != "undefined" && cide.getValues().size() > 0 && idpId != "undefined" && idpId.getValues().size() > 0) {
+    mpassLegacyCide.addValue(cide.getValues().get(0) + "@" + idpId.getValues().get(0));
+}
+        ]]></ad:Script>
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="mpassMunicipality" xsi:type="ad:Simple" sourceAttributeID="municipalities">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:municipality" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="mpassUsername" xsi:type="ad:Simple" sourceAttributeID="username">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:uid" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="mpassMunicipalityCode" xsi:type="ad:Simple" sourceAttributeID="attr_municipalityCode">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:municipalityCode" friendlyName="municipalityCode" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="mpassRole" xsi:type="ad:Simple" sourceAttributeID="structuredRolesWid">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:role" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="mpassClass" xsi:type="ad:Simple" sourceAttributeID="groups">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:class" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="mpassSchool" xsi:type="ad:Simple" sourceAttributeID="schools">
+        <resolver:Dependency ref="ecaDataApi" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:school" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="mpassSchoolCode" xsi:type="ad:Simple" sourceAttributeID="fakeSchoolCode">
+        <resolver:Dependency ref="staticAttributes" />
+        <!--<resolver:Dependency ref="ecaDataApi" />-->
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:mpass.id:schoolCode" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+    <!--
+    This is an example of an attribute sourced from a data connector.
+    -->
+    <resolver:AttributeDefinition id="eduPersonScopedAffiliation" xsi:type="ad:Scoped" scope="%{idp.scope}" sourceAttributeID="affiliation">
+        <resolver:Dependency ref="staticAttributes" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML1String" name="urn:mace:dir:attribute-def:eduPersonScopedAffiliation" encodeType="false" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:oid:1.3.6.1.4.1.5923.1.1.1.9" friendlyName="eduPersonScopedAffiliation" encodeType="false" />
+    </resolver:AttributeDefinition>
+
+
+    <!-- ========================================== -->
+    <!--      Data Connectors                       -->
+    <!-- ========================================== -->
+
+    <resolver:DataConnector id="staticAttributes" xsi:type="dc:Static">
+        <dc:Attribute id="affiliation">
+            <dc:Value>member</dc:Value>
+        </dc:Attribute>
+        <dc:Attribute id="fakeSchoolCode">
+            <dc:Value>00000</dc:Value>
+        </dc:Attribute>
+    </resolver:DataConnector>
+
+    <resolver:DataConnector id="calculateAuthnId" xsi:type="ecaid:AuthnIdDataConnector" srcAttributeNames="uid" destAttributeName="ecaauthnid" skipCalculation="idpId=opinsys_demo,idpId=mepin,idpId=ldap_test,idpId=dreamschool,idpId=gafe_test,idpId=wilma_demo,idpId=wilma_demo2" minInputLength="1">
+        <resolver:Dependency ref="uid" />
+        <resolver:Dependency ref="idpId" />
+        <resolver:Dependency ref="staticAttributes" />
+    </resolver:DataConnector>
+
+    <resolver:DataConnector id="ecaDataApi" xsi:type="eca:RestDataConnector" endpointUrl="{% endraw %}{{ secure.mpassid_data }}{% raw %}/api/1/query" hookAttribute="authnid" idpId="idpId" resultAttributePrefix="" token="038dea1fd1739fac6a754aa720a4f838d765b42d" disregardTLSCertificate="true">
+        <resolver:Dependency ref="authnid" />
+        <resolver:Dependency ref="idpId" />
+    </resolver:DataConnector>
+
+</resolver:AttributeResolver>
+{% endraw %}

@@ -1,0 +1,165 @@
+- include_vars: secure.yml
+
+
+- name: Add Shibboleth repository
+  yum_repository:
+    name: shibboleth
+    description: Shibboleth YUM repo
+    baseurl: http://download.opensuse.org/repositories/security://shibboleth/CentOS_7/
+    gpgcheck: no
+
+ 
+- name: Install httpd and ssl with shibboleth
+  yum: 
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - httpd 
+    - mod_ssl
+    - shibboleth.x86_64
+    - java-1.8.0-openjdk-devel.x86_64
+    - wget
+    - git
+    - maven
+
+
+- name: Add user jetty
+  user:
+    name: jetty
+    shell: /usr/sbin/nologin
+    groups: root
+    append: yes
+    system: yes
+
+
+- name: Create directory
+  file: 
+    path: "{{ secure.mpassid_build }}"
+    state: directory
+    mode: 0777 
+
+
+- name: Clean up builddir
+  command: /bin/rm -rf "{{ secure.mpassid_build }}"  
+
+
+- name: IDP | MPASSid | Download | git | MPASSid-pro
+  git:
+    repo: 'https://github.com/Digipalvelutehdas/MPASSid-proxy'
+    dest: "{{ secure.mpassid_build }}"
+    # version: "{{ mpassid_version }}"
+    
+
+- name: IDP |  MPASSid | Compile | MPASSid-proxy
+  shell: mvn -f "{{ secure.mpassid_build }}/pom.xml" clean install -DskipTests=true #mvn package
+  args:
+  chdir: "{{ secure.mpassid_build }}"
+  executable: /bin/bash
+  creates: /tmp/MPASSid-proxy/idp-authn-impl-shibsp/target/checkstyle-checker.xml
+
+
+- name: Copy Jar files to right place
+  command: /bin/find "{{ secure.mpassid_build }}" -name '*.jar' -exec cp {} "{{ secure.app_shibbo }}/edit-webapp/WEB-INF/lib"  \;
+
+
+- name: Unarchive authentication flows
+  unarchive: 
+    src: templates/flows.tar.gz
+    dest: "{{ secure.shibboleth.flows_authn }}"
+    remote_src: no
+
+
+- name: Find files in jetty start.d
+  find:
+    paths:            "{{ secure.app_shibbo }}/jetty-base/start.d"
+    patterns:         '*.ini'
+    recurse:          "no"
+    file_type:        "file"
+  register: find_result
+
+
+- name: Cleanup start.d in jetty-base
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items:
+    - "{{ find_result.files }}"
+
+
+- name: Create working directory for jetty
+  file:
+    path: "{{ secure.app_shibbo }}/jetty-base/work"
+    state: directory
+
+
+- name: Copy configuration files
+  template: src={{ item.src }} dest={{ item.dest }} mode={{ item.mode }} owner={{ item.owner }} group={{ item.owner }}
+  with_items:
+     - { src: proxy.conf, dest: /etc/httpd/conf.d/proxy.conf, mode: "0644", owner: root }
+     - { src: attribute-resolver.xml.j2, dest: "{{ secure.shibboleth.conf }}/attribute-resolver.xml", mode: "0777", owner: root }
+     - { src: attribute-filter.xml, dest: "{{ secure.shibboleth.conf }}/attribute-filter.xml", mode: "0777", owner: root }  
+     - { src: global.xml.j2, dest: "{{ secure.shibboleth.conf }}/global.xml", mode: "0777", owner: root }
+     - { src: metadata-providers.xml, dest: "{{ secure.shibboleth.conf }}/metadata-providers.xml", mode: "0777", owner: root }
+     - { src: logback.xml, dest: "{{ secure.shibboleth.conf }}/logback.xml", mode: "0777", owner: root }  
+     - { src: mpass.properties, dest: "{{ secure.shibboleth.conf }}/mpass.properties", mode: "0777", owner: root }
+     - { src: general-authn.xml, dest: "{{ secure.shibboleth.conf_authn }}/general-authn.xml", mode: "0777", owner: root }
+     - { src: shib-authn-beans.xml, dest: "{{ secure.shibboleth.conf_authn }}/shib-authn-beans.xml", mode: "0777", owner: root }
+     - { src: shib-authn-config.xml, dest: "{{ secure.shibboleth.conf_authn }}/shib-authn-config.xml", mode: "0777", owner: root }
+     - { src: saml-nameid.xml, dest: "{{ secure.app_shibbo }}/conf/saml-nameid.xml", mode: "0777", owner: root }
+     - { src: discovery.vm, dest: "{{ secure.shibboleth.views }}/discovery.vm", mode: "0777", owner: root }
+     - { src: prehead.vm, dest: "{{ secure.shibboleth.views }}/prehead.vm", mode: "0777", owner: root }
+     - { src: b105-style.vm, dest: "{{ secure.shibboleth.views }}/b105-style.vm", mode: "0777", owner: root }
+     - { src: head.vm, dest: "{{ secure.shibboleth.views }}/head.vm", mode: "0777", owner: root }
+     - { src: authn-messages.properties, dest: "{{ secure.shibboleth.messages }}/authn-messages.properties", mode: "0777", owner: root }
+     - { src: authn-messages_sv.properties, dest: "{{ secure.shibboleth.messages }}/authn-messages_sv.properties", mode: "0777", owner: root }
+     - { src: error-messages.properties, dest: "{{ secure.shibboleth.messages }}/error-messages.properties", mode: "0777", owner: root }
+     - { src: ldap-test-metadata.xml, dest: "{{ secure.shibboleth.sp }}/ldap-test-metadata.xml", mode: "0777", owner: root }
+     - { src: attribute-map.xml, dest: "{{ secure.shibboleth.sp }}/attribute-map.xml", mode: "0777", owner: root }
+     - { src: start.ini, dest: "{{ secure.app_shibbo }}/jetty-base/start.ini", mode: "0777", owner: root }
+     - { src: idp.ini, dest: "{{ secure.app_shibbo }}/jetty-base/start.d/idp.ini", mode: "0777", owner: root }
+     - { src: jsp.ini, dest: "{{ secure.app_shibbo }}/jetty-base/start.d/jsp.ini", mode: "0777", owner: root }
+     - { src: jstl.ini, dest: "{{ secure.app_shibbo }}/jetty-base/start.d/jstl.ini", mode: "0777", owner: root }
+     - { src: jetty.xml, dest: "{{ secure.app_shibbo }}/jetty-base/etc/jetty.xml", mode: "0777", owner: root }
+     - { src: subject-c14n.xml, dest: "{{ secure.app_shibbo }}/conf/c14n/subject-c14n.xml", mode: "0777", owner: root }
+     - { src: saml-nameid.properties, dest: "{{ secure.app_shibbo }}/conf/saml-nameid.properties", mode: "0777", owner: root }
+
+
+- name: Configure idp.properties file
+  lineinfile:
+    path: "{{ secure.shibboleth.conf }}/idp.properties"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { regexp: '^idp.sealer.storePassword=', line: "idp.sealer.storePassword= {{ keystore_password }}" }
+    - { regexp: '^idp.sealer.keyPassword=', line: "idp.sealer.keyPassword= {{ keystore_password }}" }
+    - { regexp: '^idp.authn.flows=', line: "idp.authn.flows= {{ secure.shibboleth.idp_properties.authn_flows }}" }
+    - { regexp: '^idp.storage.StorageService=', line: "idp.storage.StorageService= org.opensaml.storage.impl.MemoryStorageService" }
+    - { regexp: '^idp.storage.cleanupInterval=', line: "idp.storage.cleanupInterval= PT10M" }
+    - { regexp: '^idp.session.StorageService=', line: "idp.session.StorageService= shibboleth.StorageService" }
+    - { regexp: '^idp.session.slop=', line: "idp.session.slop= 0" }
+    - { regexp: '^idp.session.trackSPSessions=', line: "idp.session.trackSPSessions= true" } 
+    - { regexp: '^idp.status.accessPolicy=', line: "idp.status.accessPolicy= AccessByIPAddress" } 
+    - { regexp: '^idp.resolvertest.accessPolicy=', line: "idp.resolvertest.accessPolicy= AccessByIPAddress" }
+    - { regexp: '^idp.reload.accessPolicy=', line: "idp.reload.accessPolicy= AccessByIPAddress" }
+    
+
+- name: Makedirectory tree readable
+  file:
+    path: "{{ secure.app_root }}"
+    owner: jetty        
+    mode: u=rwx,g=rx,o=r
+    recurse: yes
+
+
+- name: Restart shibd 
+  service: name=shibd enabled=yes state=restarted
+
+
+- name: Restart shiboleth-idp with new config
+  service: name=shibboleth-idp enabled=yes state=restarted
+
+
+- name: Ensure Apache is running  
+  service: name=httpd enabled=yes state=restarted
+

@@ -1,0 +1,48 @@
+{% raw %}
+#parse( "prehead.vm" )
+#set ($flowMap = $authenticationContext.getPotentialFlows())
+#set ($methodsByTags = $authenticationContext.getSubcontext("fi.okm.mpass.shibboleth.authn.AuthenticationDiscoveryContext").getMethodsByTag())
+<html>
+#if ($methodsByTags.size() == 1 and $methodsByTags.get(0).getMethods().size() == 1)
+   <head>
+      #set ($flowKey = $methodsByTags.get(0).getMethods().get(0).getId())
+      #set ($link = "${flowExecutionUrl}&j_authnflow=${flowKey}&_eventId_proceed=_eventId_proceed")
+      <meta http-equiv="refresh" content="0; url=$link" />
+   </head>
+#else
+  #set ($discoFlowId = $authenticationContext.getAttemptedFlow().getId())
+<head>
+<meta charset="UTF-8">
+<title>MPASS kirjautumisratkaisu</title>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+#parse( "b105-style.vm" )
+</head>
+
+<body>
+<div id="page-container">
+	<div id="title-area"></div>
+	<div id="content-container">
+		<div id="content-header">
+			<div class="left-column"><p>Kirjaudu sisään haluamasi palvelun kautta</p></div>
+			<div class="right-column"><p>Ongelmatilanteissa ota yhteyttä <a href="mailto:tuki@mpass.fi">tuki@mpass.fi</a></p></div>
+		</div>
+		<div id="main-content">
+                    #foreach ($methodsByTag in $methodsByTags)
+                        #set ($upperCaseTag = $springMacroRequestContext.getMessage("$methodsByTag.getTag().getTitle()","Muut kirjautumistavat").toUpperCase())
+                        <div class="some-login"><p><b>$upperCaseTag</b></p>
+                        #foreach ($method in $methodsByTag.getMethods())
+                            #set ($link = $flowExecutionUrl + "&j_authnflow=" + $method.getId() + "&_eventId_proceed=_eventId_proceed")
+                            #set ($upperCaseTitle = $springMacroRequestContext.getMessage("$method.getTitle()","TITLE").toUpperCase())
+                            <div class="#springMessageText("$method.getStyle()","btn simulated")"><p><a href="$link">$upperCaseTitle</a></p></div>
+                        #end
+                        <div class="clear"></div></div>
+                    #end
+
+		</div>
+	</div>
+</div>
+</body>
+#end
+</html>
+
+{% endraw %}

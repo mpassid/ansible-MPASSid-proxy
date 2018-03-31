@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is an EXAMPLE metadata configuration file. -->
+<MetadataProvider id="ShibbolethMetadata" xsi:type="ChainingMetadataProvider"
+    xmlns="urn:mace:shibboleth:2.0:metadata"
+    xmlns:mpassmd="urn:mpassid:shib3:metadata"
+    xmlns:resource="urn:mace:shibboleth:2.0:resource"
+    xmlns:security="urn:mace:shibboleth:2.0:security"
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="urn:mace:shibboleth:2.0:metadata http://shibboleth.net/schema/idp/shibboleth-metadata.xsd
+                        urn:mace:shibboleth:2.0:resource http://shibboleth.net/schema/idp/shibboleth-resource.xsd 
+                        urn:mace:shibboleth:2.0:security http://shibboleth.net/schema/idp/shibboleth-security.xsd
+                        urn:mpassid:shib3:metadata classpath:/schema/mpass-metadata.xsd
+                        urn:oasis:names:tc:SAML:2.0:metadata http://docs.oasis-open.org/security/saml/v2.0/saml-schema-metadata-2.0.xsd">
+                        
+    <!-- ========================================================================================== -->
+    <!--                             Metadata Configuration                                         -->
+    <!--                                                                                            -->
+    <!--  Below you place the mechanisms which define how to load the metadata for the SP you will  -->
+    <!--  provide a service to.                                                                     -->
+    <!--                                                                                            -->
+    <!--  Two examples are provided.  The Shibboleth Documentation at                               -->
+    <!--  https://wiki.shibboleth.net/confluence/display/IDP30/MetadataConfiguration                -->
+    <!--  provides more details.                                                                    --> 
+    <!--                                                                                            -->
+    <!--  NOTE.  This file SHOULD NOT contain the metadata for this IdP.                            -->
+    <!--                                                                                            -->
+    <!-- ========================================================================================== -->
+
+    <!-- Example HTTP metadata provider.  Use this if you want to download
+         the metadata from a remote service.
+         
+         You *MUST*  provider the SignatureValidationFilter in order to function securely.
+         Get the PubLic key, and validate it via some out of band mechanism, from the
+         party publishing the metadata
+         
+         The EntityRoleWhiteList saves memory by only loading metadata from entity types
+         that you will interoperate with. 
+    
+    <MetadataProvider id="HTTPMetadata"
+                      xsi:type="FileBackedHTTPMetadataProvider"
+                      backingFile="%{idp.home}/metadata/localCopyFromXYZHTTP.xml"
+                      metadataURL="http://WHATEVER"> 
+        
+        <MetadataFilter xsi:type="SignatureValidation"
+            requireSignedMetadata="false">
+            <PublicKey>
+                THIS IS AN EXAMPLE
+            
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxg0TyQAP/tIvOH89EtaX
+                uRRn8SYzTj7W1TbNY4VvBmobjkRmSkki4hH9x4sQpi635wn6WtXTN/FNNmkTK3N/
+                LspmBWxfZS+n+cc7I82E5yvCAPX67QsZgqgglp2W5dvK/FsMMCS6X6SVqzBLMP88
+                NenXKxY+HMxMs0sT0UKYh1cAEqadrHRBO65aDBcm5a0sBVYt9K6pgaOHrp/zSIbh
+                nR5tFFLjBbtFktDpHL3AdGBH3OYidNGKBO3tJ3Ms7LeKXsM0+0Y4P+9fHZINL2X3
+                E2N6GVnKs5PZTg9sP0FtIpAbYm/+zCx7Yj1ET/Er8mDd6tNVGSQsn9s5xUBwGqn1
+                4wIDAQAB
+            </PublicKey>
+        </MetadataFilter>
+        <MetadataFilter xsi:type="EntityRoleWhiteList">
+            <RetainedRole>md:SPSSODescriptor</RetainedRole>
+        </MetadataFilter>
+        
+    </MetadataProvider>
+    
+    -->   
+
+    <!-- Example file metadata provider.  Use this if you want to load metadata
+         from a local file.  You might use this if you have some local SPs
+         which are not "federated" but you wish to offer a service to.
+         
+         If you do not provide a SignatureValidation filter then you *have*
+         to know that the file is valid.
+         
+
+    <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="PATH_TO_YOUR_METADATA"/>
+     -->
+
+    <MetadataProvider id="MPASS-IDP"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/idp-metadata.xml"/> 
+
+    <!-- <MetadataProvider id="EducloudProxyDev"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/educloud-proxy-devel.xml"/>
+    <MetadataProvider id="MPASSConnectorAdmin"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/connector-admin.xml"/>
+    <MetadataProvider id="MPASSConnectorUser"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/connector-user.xml"/>
+    <MetadataProvider id="MPASSProxyAttributeTest"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/proxy-attributetest-metadata.xml"/>
+    <MetadataProvider id="MPASSProxyAttributeTest2"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/proxy-attributetest2-metadata.xml"/>
+    <MetadataProvider id="MPASSProxyAttributeTest3"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/proxy-attributetest3-metadata.xml"/>
+    <MetadataProvider id="MPASSProxyAttributeTest4"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/proxy-attributetest4-metadata.xml"/>
+    <MetadataProvider id="MPASSProxyAttributeTest5"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/proxy-attributetest5-metadata.xml"/>
+    <MetadataProvider id="MPASSProxyAttributeTest6"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/proxy-attributetest6-metadata.xml"/>
+    <MetadataProvider id="SeppoIOTest"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/seppo-metadata.xml"/>
+    <MetadataProvider id="ECABazaarDev"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/bazaardev-metadata.xml"/>
+    <MetadataProvider id="Nettimoppi"  xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/nettimoppi-metadata.xml"/>
+    <MetadataProvider id="DreamSchoolSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/dreamschool-sp-metadata.xml"/>
+    <MetadataProvider id="SanomaProTestSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/sanomapro-test-metadata.xml"/>
+    <MetadataProvider id="VagrantTestSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/vagrant-sp-metadata.xml"/>
+    <MetadataProvider id="PedanetTestSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/pedanet-test-sp-metadata.xml"/>
+    <MetadataProvider id="DiporDevSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/dipor-dev-metadata.xml"/>
+    <MetadataProvider id="PoutaStressSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/vm0203-metadata.xml"/>
+    <MetadataProvider id="RunokoneSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/runokone-metadata.xml"/>
+    <MetadataProvider id="SanomaProQaSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/sanomapro-qa-metadata.xml"/>
+    <MetadataProvider id="HaltuEopSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/haltu-eop-metadata.xml"/>
+    <MetadataProvider id="EduuniSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/eduuni-sp-metadata.xml"/>
+    <MetadataProvider id="OpenvisioSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/openvisio-meta.xml"/>
+    <MetadataProvider id="NomadiSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/nomadi-sp-metadata.xml"/>
+    <MetadataProvider id="EstonianTestSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/estonia-sp-metadata.xml"/>
+    <MetadataProvider id="EstonianTest2SP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/estonia2-sp-metadata.xml"/>
+    <MetadataProvider id="OppimaisemaSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/oppimaisema-metadata.xml"/>
+    <MetadataProvider id="SkilzzupSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/skilzzup-metadata.xml"/>
+    <MetadataProvider id="QridiSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/qridi-metadata.xml"/>
+    <MetadataProvider id="OpentuntiSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/opentunti-metadata.xml"/>
+    <MetadataProvider id="FunLearningSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/funlearning-metadata.xml"/>
+    <MetadataProvider id="TypingMasterSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/metadata_typingmaster_eu.xml"/>
+    <MetadataProvider id="Auth0TestSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/auth0-testing-metadata.xml"/>
+    <MetadataProvider id="ItslearningTestSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/itslearning_saml2v2_SP_metadata_test.xml"/>
+    <MetadataProvider id="FronterTestSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/ws-test.fronter.com-sp-metadata.xml"/>
+    <MetadataProvider id="OpinaikaSP" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/opinaika-metadata.xml"/>
+    <MetadataProvider id="ECANewDemoServer" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/educloud-alliance-new-demo-server.xml"/>
+    <MetadataProvider id="Ubiikki" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/ubiikki-metadata.xml"/>
+    <MetadataProvider id="Paikkaoppi" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/paikkaoppi-metadata.xml"/>
+    <MetadataProvider id="Paikkaoppi2" xsi:type="FilesystemMetadataProvider" metadataFile="/opt/shibboleth-idp/metadata/paikkaoppi2-metadata.xml"/>
+    <MetadataProvider id="tttSP" xsi:type="mpassmd:DataSourceMetadataProvider" dataSource="metadataDataSource"/>
+
+    -->
+    
+</MetadataProvider>

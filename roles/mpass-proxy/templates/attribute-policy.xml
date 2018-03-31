@@ -1,0 +1,29 @@
+{% raw %}<afp:AttributeFilterPolicyGroup
+    xmlns="urn:mace:shibboleth:2.0:afp:mf:basic"
+    xmlns:saml="urn:mace:shibboleth:2.0:afp:mf:saml"
+    xmlns:basic="urn:mace:shibboleth:2.0:afp:mf:basic"
+    xmlns:afp="urn:mace:shibboleth:2.0:afp"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <afp:AttributeFilterPolicy>
+        <!-- This policy is in effect in all cases. -->
+        <afp:PolicyRequirementRule xsi:type="ANY"/>
+
+        <afp:AttributeRule attributeID="targeted-id">
+            <afp:PermitValueRuleReference ref="ScopingRules"/>
+        </afp:AttributeRule>
+
+        <!-- Require NameQualifier/SPNameQualifier match IdP and SP entityID respectively. -->
+        <afp:AttributeRule attributeID="persistent-id">
+            <afp:PermitValueRule xsi:type="saml:NameIDQualifierString"/>
+        </afp:AttributeRule>
+
+        <!-- Catch-all that passes everything else through unmolested. -->
+        <afp:AttributeRule attributeID="*">
+            <afp:PermitValueRule xsi:type="ANY"/>
+        </afp:AttributeRule>
+        
+    </afp:AttributeFilterPolicy>
+
+</afp:AttributeFilterPolicyGroup>
+{% endraw %}

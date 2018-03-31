@@ -1,0 +1,81 @@
+{% raw %}<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+                           
+       default-init-method="initialize"
+       default-destroy-method="destroy">
+
+    <!-- Servlet context-relative path to wherever your implementation lives. -->
+    <bean id="shibboleth.authn.ShibMepin.externalAuthnPath" class="java.lang.String"
+        c:_0="https://mpass-proxy-test.csc.fi/Shibboleth.sso/Login?entityID=https://edu-idp.mepin.com/saml2/idp/metadata.php" />
+
+    <bean id="shibboleth.authn.ShibGafe.externalAuthnPath" class="java.lang.String"
+        c:_0="https://mpass-proxy-test.csc.fi/Shibboleth.sso/Login?entityID=https://accounts.google.com/o/saml2?idpid=C0211subj" />
+
+    <bean id="shibboleth.authn.ShibDreamSchool.externalAuthnPath" class="java.lang.String"
+        c:_0="https://mpass-proxy-test.csc.fi/Shibboleth.sso/Login?entityID=https://id.dreamschool.fi/saml/metadata/" />
+
+    <!-- Servlet context-relative path to wherever your implementation lives. -->
+    <bean id="shibboleth.authn.ShibLdap.externalAuthnPath" class="java.lang.String"
+        c:_0="https://mpass-proxy-test.csc.fi/Shibboleth.sso/Login?entityID=https://mpass-ldap-test.csc.fi/idp/shibboleth" />
+
+    <bean id="shibboleth.authn.ShibStress.externalAuthnPath" class="java.lang.String"
+        c:_0="https://mpass-proxy-test.csc.fi/Shibboleth.sso/Login?entityID=https://mpass-ldap-test.csc.fi/idp/shibboleth&amp;authnContextClassRef=urn:oasis:names:tc:SAML:2.0:ac:classes:MPASSInternal" />
+
+    <bean id="shibboleth.authn.ShibExternal.externalHandler" class="java.lang.String"
+        c:_0="https://mpass-proxy-test.csc.fi/override/Shibboleth.sso/Login?entityID=https://mpass-ldap-test.csc.fi/idp/shibboleth" />
+
+    <bean id="shibboleth.authn.ShibExternal.externalAuthServlet" class="java.lang.String"
+        c:_0="https://mpass-proxy-test.csc.fi/idp/Authn/ShibExternal" />
+
+    <!--
+    Define entries here to map error messages returned by external modules and classify them as particular
+    kinds of errors for use in your templates and as events in flows.
+    
+    The examples here just allow external signaling of the exact type of condition to record.
+    
+    If you want to "fall-through" to other login flows, include a mapping to "ReselectFlow".
+    -->
+    <util:map id="shibboleth.authn.Shib.ClassifiedMessageMap">
+<!--        <entry key="NoCredentials">
+            <list>
+                <value>ReselectFlow</value>
+            </list>
+        </entry>
+        <entry key="ReselectFlow">
+            <list>
+                <value>NoCredentials</value>
+            </list>
+        </entry>-->
+
+        <entry key="UnknownUsername">
+            <list>
+                <value>UnknownUsername</value>
+            </list>
+        </entry>
+        <entry key="InvalidPassword">
+            <list>
+                <value>InvalidPassword</value>
+            </list>
+        </entry>
+        <entry key="ExpiredPassword">
+            <list>
+                <value>ExpiredPassword</value>
+            </list>
+        </entry>
+        <entry key="ExpiringPassword">
+            <list>
+                <value>ExpiringPassword</value>
+            </list>
+        </entry>
+    </util:map>
+    
+</beans>
+{% endraw %}
