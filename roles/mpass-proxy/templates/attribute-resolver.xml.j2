@@ -294,7 +294,7 @@ if (cide != "undefined" && cide.getValues().size() > 0 && idpId != "undefined" &
         <resolver:Dependency ref="staticAttributes" />
     </resolver:DataConnector>
 
-    <resolver:DataConnector id="ecaDataApi" xsi:type="eca:RestDataConnector" endpointUrl="{% endraw %}{{ secure.mpassid_data }}{% raw %}/api/1/query" hookAttribute="authnid" idpId="idpId" resultAttributePrefix="" token="038dea1fd1739fac6a754aa720a4f838d765b42d" disregardTLSCertificate="true">
+    <resolver:DataConnector id="ecaDataApi" xsi:type="eca:RestDataConnector" endpointUrl="{% endraw %}{{ secure.mpassid_data }}{% raw %}/api/1/query" hookAttribute="authnid" idpId="idpId" resultAttributePrefix="" token="{% endraw %}{{ secure.mpassid_data_token }}{% raw %}" disregardTLSCertificate="true">
         <resolver:Dependency ref="authnid" />
         <resolver:Dependency ref="idpId" />
     </resolver:DataConnector>

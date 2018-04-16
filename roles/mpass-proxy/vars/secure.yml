@@ -8,6 +8,7 @@
    app_jetty_base: /opt/shibboleth-idp/jetty-base
    mpassid_build: /opt/tmp
    mpassid_data: https://127.0.0.1
+   mpassid_data_token: 0000000000000000000000000000000000000000
    shibboleth:      
      conf: /opt/shibboleth-idp/conf
      attribute_resolver:
