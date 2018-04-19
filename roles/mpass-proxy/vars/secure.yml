@@ -6,6 +6,7 @@
    app_jetty: /opt/jetty
    app_shibbo: /opt/shibboleth-idp
    app_jetty_base: /opt/shibboleth-idp/jetty-base
+   mpassid_version: MPASSid-proxy-0.9.2 
    mpassid_build: /opt/tmp
    mpassid_data: https://127.0.0.1
    mpassid_data_token: 0000000000000000000000000000000000000000

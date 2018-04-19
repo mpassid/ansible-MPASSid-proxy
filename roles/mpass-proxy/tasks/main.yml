@@ -47,7 +47,7 @@
   git:
     repo: 'https://github.com/Digipalvelutehdas/MPASSid-proxy'
     dest: "{{ secure.mpassid_build }}"
-    # version: "{{ mpassid_version }}"
+    version: "{{ secure.mpassid_version }}"
     
 
 - name: IDP |  MPASSid | Compile | MPASSid-proxy
