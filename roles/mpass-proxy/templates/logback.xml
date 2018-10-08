@@ -4,24 +4,24 @@
     <!-- Logs IdP, but not OpenSAML, messages -->
     <logger name="net.shibboleth.idp" level="WARN"/>
     <!-- Logs IdP, but not OpenSAML, messages -->
-    <logger name="fi.okm.mpass" level="WARN"/>
-    <logger name="fi.okm.mpass.shibboleth.authn.impl.PopulateDiscoveryContext" level="ALL"/>
-    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildAuthnSourceRestResponse" level="ALL"/>
-    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildAuthnTagsRestResponse" level="ALL"/>
-    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildMetaRestResponse" level="ALL"/>
+    <logger name="fi.mpass. level="WARN"/>
+    <logger name="fi.mpass.shibboleth.authn.impl.PopulateDiscoveryContext" level="ALL"/>
+    <logger name="fi.mpass.shibboleth.profile.impl.BuildAuthnSourceRestResponse" level="ALL"/>
+    <logger name="fi.mpass.shibboleth.profile.impl.BuildAuthnTagsRestResponse" level="ALL"/>
+    <logger name="fi.mpass.shibboleth.profile.impl.BuildMetaRestResponse" level="ALL"/>
 
-    <logger name="fi.okm.mpass.shibboleth.monitor.ContentContainsResponseValidator" level="ALL"/>
-<!--    <logger name="fi.okm.mpass.shibboleth.profile.impl.StoreMonitoringResult" level="ALL"/>-->
-<!--    <logger name="fi.okm.mpass" level="ALL"/>-->
-<!--    <logger name="fi.okm.mpass.shibboleth.monitor.BaseSequenceStepResolver" level="ALL"/>-->
-    <logger name="fi.okm.mpass.shibboleth.attribute.resolver.dc.impl.RestDataConnector" level="INFO"/>
-<!--    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildMetaRestResponse" level="ALL"/>
-    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildServiceRestResponse" level="ALL"/>
-    <logger name="fi.okm.mpass.shibboleth.profile.metadata" level="ALL"/>
-    <logger name="fi.okm.mpass.shibboleth.authn.impl.ExtractShibbolethAttributesFromRequest" level="ALL"/>
-    <logger name="fi.okm.mpass.shibboleth.authn.impl.ShibbolethSpAuthnServlet" level="ALL"/>-->
-<!--    <logger name="fi.okm.mpass.shibboleth.authn.impl" level="DEBUG" />-->
-<!--    <logger name="fi.okm.mpass.shibboleth.monitor" level="ALL"/>-->
+    <logger name="fi.mpass.shibboleth.monitor.ContentContainsResponseValidator" level="ALL"/>
+<!--    <logger name="fi.mpass.shibboleth.profile.impl.StoreMonitoringResult" level="ALL"/>-->
+<!--    <logger name="fi.mpass. level="ALL"/>-->
+<!--    <logger name="fi.mpass.shibboleth.monitor.BaseSequenceStepResolver" level="ALL"/>-->
+    <logger name="fi.mpass.shibboleth.attribute.resolver.dc.impl.RestDataConnector" level="INFO"/>
+<!--    <logger name="fi.mpass.shibboleth.profile.impl.BuildMetaRestResponse" level="ALL"/>
+    <logger name="fi.mpass.shibboleth.profile.impl.BuildServiceRestResponse" level="ALL"/>
+    <logger name="fi.mpass.shibboleth.profile.metadata" level="ALL"/>
+    <logger name="fi.mpass.shibboleth.authn.impl.ExtractShibbolethAttributesFromRequest" level="ALL"/>
+    <logger name="fi.mpass.shibboleth.authn.impl.ShibbolethSpAuthnServlet" level="ALL"/>-->
+<!--    <logger name="fi.mpass.shibboleth.authn.impl" level="DEBUG" />-->
+<!--    <logger name="fi.mpass.shibboleth.monitor" level="ALL"/>-->
     <!-- Logs OpenSAML, but not IdP, messages -->
     <logger name="org.opensaml.saml" level="INFO"/>
 

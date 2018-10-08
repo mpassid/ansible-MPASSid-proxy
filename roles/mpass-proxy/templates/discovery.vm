@@ -1,7 +1,7 @@
 {% raw %}
 #parse( "prehead.vm" )
 #set ($flowMap = $authenticationContext.getPotentialFlows())
-#set ($methodsByTags = $authenticationContext.getSubcontext("fi.okm.mpass.shibboleth.authn.AuthenticationDiscoveryContext").getMethodsByTag())
+#set ($methodsByTags = $authenticationContext.getSubcontext("fi.mpass.shibboleth.authn.AuthenticationDiscoveryContext").getMethodsByTag())
 <html>
 #if ($methodsByTags.size() == 1 and $methodsByTags.get(0).getMethods().size() == 1)
    <head>

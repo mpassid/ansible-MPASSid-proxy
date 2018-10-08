@@ -21,16 +21,16 @@
         xmlns:enc="urn:mace:shibboleth:2.0:attribute:encoder" 
         xmlns:sec="urn:mace:shibboleth:2.0:security"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ecaid="fi.okm.mpass.shibboleth.attribute.dc.authnid"
-        xmlns:eca="fi.okm.mpass.shibboleth.attribute.dc.rest"
+        xmlns:ecaid="fi.mpass.shibboleth.attribute.dc.authnid"
+        xmlns:eca="fi.mpass.shibboleth.attribute.dc.rest"
         xsi:schemaLocation="urn:mace:shibboleth:2.0:resolver http://shibboleth.net/schema/idp/shibboleth-attribute-resolver.xsd
                             urn:mace:shibboleth:2.0:resolver:pc http://shibboleth.net/schema/idp/shibboleth-attribute-resolver-pc.xsd
                             urn:mace:shibboleth:2.0:resolver:ad http://shibboleth.net/schema/idp/shibboleth-attribute-resolver-ad.xsd
                             urn:mace:shibboleth:2.0:resolver:dc http://shibboleth.net/schema/idp/shibboleth-attribute-resolver-dc.xsd
                             urn:mace:shibboleth:2.0:attribute:encoder http://shibboleth.net/schema/idp/shibboleth-attribute-encoder.xsd
                             urn:mace:shibboleth:2.0:security http://shibboleth.net/schema/idp/shibboleth-security.xsd
-                            fi.okm.mpass.shibboleth.attribute.dc.authnid classpath:/eca-authnid-connector.xsd
-                            fi.okm.mpass.shibboleth.attribute.dc.rest classpath:/rest-connector.xsd">
+                            fi.mpass.shibboleth.attribute.dc.authnid classpath:/eca-authnid-connector.xsd
+                            fi.mpass.shibboleth.attribute.dc.rest classpath:/rest-connector.xsd">
     <!-- ========================================== -->
     <!--      Attribute Definitions                 -->
     <!-- ========================================== -->
@@ -110,7 +110,7 @@
         <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="urn:TODO:idp" friendlyName="idp" encodeType="false" />
         <ad:Script><![CDATA[
 authnContext = resolutionContext.getParent().getSubcontext("net.shibboleth.idp.authn.context.AuthenticationContext");
-shibContext = authnContext.getSubcontext("fi.okm.mpass.shibboleth.authn.context.ShibbolethAuthnContext");
+shibContext = authnContext.getSubcontext("fi.mpass.shibboleth.authn.context.ShibbolethAuthnContext");
 idp.addValue(shibContext.getIdp());
 //idp.addValue("testing");
         ]]></ad:Script>
