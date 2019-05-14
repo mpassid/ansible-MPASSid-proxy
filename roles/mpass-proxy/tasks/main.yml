@@ -54,9 +54,9 @@
 - name: MPASSid build monitor API and implementation 
   shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-monitor/pom.xml" clean install -DskipTests=true #mvn package
   args:
-  chdir: "{{ secure.mpassid_build }}/shibboleth-idp-monitor"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-monitor/mpassid-checkstyle.xml"
+    chdir: "{{ secure.mpassid_build }}/shibboleth-idp-monitor"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-monitor/mpassid-checkstyle.xml"
 
 
 ##############################
@@ -72,9 +72,9 @@
 - name: Compile shibboleth-idp-metadata-ext
   shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-metadata-ext/pom.xml" clean install -DskipTests=true #mvn package
   args:
-  chdir: "{{ secure.mpassid_build }}"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-metadata-ext/checkstyle-checker.xml"
+    chdir: "{{ secure.mpassid_build }}"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-metadata-ext/checkstyle-checker.xml"
 
 
 #############################
@@ -90,9 +90,26 @@
 - name: Compile shibboleth-idp-audit-ext
   shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-audit-ext/pom.xml" clean install -DskipTests=true #mvn package
   args:
-  chdir: "{{ secure.mpassid_build }}/shibboleth-idp-audit-ext"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-audit-ext/checkstyle-checker.xml"
+    chdir: "{{ secure.mpassid_build }}/shibboleth-idp-audit-ext"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-audit-ext/checkstyle-checker.xml"
+
+
+############################
+
+- name: Download shibboleth-idp-authn-shibsp
+  git:
+    repo: 'https://github.com/mpassid/shibboleth-idp-authn-shibsp'
+    dest: "{{ secure.mpassid_build }}/shibboleth-idp-authn-shibsp"
+    version: 0.9.7
+
+
+- name: Compile  shibboleth-idp-authn-shibsp
+  shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-authn-shibsp/pom.xml" clean install -DskipTests=true #mvn package
+  args:
+    chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-shibsp"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-shibsp/checkstyle-checker.xml"
 
 
 ##############################
@@ -108,9 +125,9 @@
 - name: Compile  shibboleth-idp-attribute-ecadata
   shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-attribute-ecadata/pom.xml" clean install -DskipTests=true #mvn package
   args:
-  chdir: "{{ secure.mpassid_build }}}/shibboleth-idp-attribute-ecadata"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-attribute-ecadata/checkstyle-checker.xml"
+    chdir: "{{ secure.mpassid_build }}/shibboleth-idp-attribute-ecadata"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-attribute-ecadata/checkstyle-checker.xml"
  
 
 #############################
@@ -126,9 +143,9 @@
 - name: Compile  shibboleth-idp-attribute-authnid
   shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-attribute-authnid/pom.xml" clean install -DskipTests=true #mvn package
   args:
-  chdir: "{{ secure.mpassid_build }}}/shibboleth-idp-attribute-authnid"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-attribute-authnid/checkstyle-checker.xml"
+    chdir: "{{ secure.mpassid_build }}/shibboleth-idp-attribute-authnid"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-attribute-authnid/checkstyle-checker.xml"
  
 
 #############################
@@ -144,9 +161,9 @@
 - name: Compile shibboleth-idp-authn-jwt
   shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-authn-jwt/pom.xml" clean install -DskipTests=true #mvn package
   args:
-  chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-jwt"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-jwt/checkstyle-checker.xml"
+    chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-jwt"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-jwt/checkstyle-checker.xml"
  
 
 #############################
@@ -162,9 +179,9 @@
 - name: Compile shibboleth-idp-authn-wilma
   shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-authn-wilma/pom.xml" clean install -DskipTests=true #mvn package
   args:
-  chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-wilma"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-wilma/checkstyle-checker.xml"
+    chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-wilma"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-wilma/checkstyle-checker.xml"
  
 
 ###############################
@@ -180,9 +197,9 @@
 - name: Compile shibboleth-idp-authn-discovery
   shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-authn-discovery/pom.xml" clean install -DskipTests=true #mvn package
   args:
-  chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-discovery"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-discovery/checkstyle-checker.xml"
+    chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-discovery"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-discovery/checkstyle-checker.xml"
   
 
 ###############################
@@ -198,27 +215,13 @@
 - name: IDP |  MPASSid | Compile | shibboleth-idp-authn-socialuser
   shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-authn-socialuser/pom.xml" clean install -DskipTests=true #mvn package
   args:
-  chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-socialuser"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-discovery/checkstyle-checker.xml"
+    chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-socialuser"
+    executable: /bin/bash
+    creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-discovery/checkstyle-checker.xml"
   
 
 ###############################
 
-
-- name: Download shibboleth-idp-authn-shibsp
-  git:
-    repo: 'https://github.com/mpassid/shibboleth-idp-authn-shibsp'
-    dest: "{{ secure.mpassid_build }}/shibboleth-idp-authn-shibsp"
-    # version: "{{ secure.shibboleth_idp_authn_shibsp_version }}"
-
-
-- name: Compile  shibboleth-idp-authn-shibsp
-  shell: mvn -f "{{ secure.mpassid_build }}/shibboleth-idp-authn-shibsp/pom.xml" clean install -DskipTests=true #mvn package
-  args:
-  chdir: "{{ secure.mpassid_build }}/shibboleth-idp-authn-shibsp"
-  executable: /bin/bash
-  creates: "{{ secure.mpassid_build }}/shibboleth-idp-authn-shibsp/checkstyle-checker.xml"
 
 
 ##################################

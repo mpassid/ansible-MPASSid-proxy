@@ -1,4 +1,6 @@
 ---
 - src: cmprescott.xml
 - src: CSCfi.jetty
-- src: CSCfi.shibboleth-idp
+- src: https://github.com/CSCfi/ansible-role-shibboleth-idp.git
+  version: v1.1.8
+  name: CSCfi.shibboleth-idp-v1.1.8 
