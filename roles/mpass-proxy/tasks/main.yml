@@ -48,7 +48,7 @@
   git:
     repo: 'https://github.com/mpassid/shibboleth-idp-monitor'
     dest: "{{ secure.mpassid_build }}/shibboleth-idp-monitor"
-    # version: "{{ secure.shibboleth_idp_monitor_version }}"
+    # version: 
     
 
 - name: MPASSid build monitor API and implementation 
@@ -66,7 +66,7 @@
   git:
     repo: 'https://github.com/mpassid/shibboleth-idp-metadata-ext'
     dest: "{{ secure.mpassid_build }}/shibboleth-idp-metadata-ext"
-    # version: "{{ secure.shibboleth_idp_metadata_ext_version }}"
+    # version: 
 
 
 - name: Compile shibboleth-idp-metadata-ext
@@ -84,7 +84,7 @@
   git:
     repo: 'https://github.com/mpassid/shibboleth-idp-audit-ext'
     dest: "{{ secure.mpassid_build }}/shibboleth-idp-audit-ext"
-    # version: "{{ secure.shibboleth_idp_audit-extt_version }}"
+    # version:
 
  
 - name: Compile shibboleth-idp-audit-ext
@@ -119,7 +119,7 @@
   git:
     repo: 'https://github.com/mpassid/shibboleth-idp-attribute-ecadata'
     dest: "{{ secure.mpassid_build }}/shibboleth-idp-attribute-ecadata"
-    # version: "{{ secure.shibboleth_idp_attribute_ecadata_version }}"
+    # version: 
 
 
 - name: Compile  shibboleth-idp-attribute-ecadata
@@ -137,7 +137,7 @@
   git:
     repo: 'https://github.com/mpassid/shibboleth-idp-attribute-authnid'
     dest: "{{ secure.mpassid_build }}/shibboleth-idp-attribute-authnid"
-    # version: "{{ secure.shibboleth_idp-attribute_authnid_version }}"
+    version: 0.9.5
 
 
 - name: Compile  shibboleth-idp-attribute-authnid
@@ -173,7 +173,7 @@
   git:
     repo: 'https://github.com/mpassid/shibboleth-idp-authn-wilma'
     dest: "{{ secure.mpassid_build }}/shibboleth-idp-authn-wilma"
-    # version: "{{ secure.shibboleth-idp-authn-wilma_version }}"
+    # version: 
 
 
 - name: Compile shibboleth-idp-authn-wilma
@@ -191,7 +191,7 @@
   git:
     repo: 'https://github.com/mpassid/shibboleth-idp-authn-discovery'
     dest: "{{ secure.mpassid_build }}/shibboleth-idp-authn-discovery"
-    # version: "{{ secure.shibboleth-idp-authn-discovery_version }}"
+    # version: 
 
 
 - name: Compile shibboleth-idp-authn-discovery
@@ -209,7 +209,7 @@
   git:
     repo: 'https://github.com/mpassid/shibboleth-idp-authn-socialuser'
     dest: "{{ secure.mpassid_build }}/shibboleth-idp-authn-socialuser"
-    # version: "{{ secure.shibboleth_idp_authn_socialuser_version }}"
+    # version: 
 
 
 - name: IDP |  MPASSid | Compile | shibboleth-idp-authn-socialuser
@@ -314,6 +314,7 @@
      - { src: jetty.xml, dest: "{{ secure.app_shibbo }}/jetty-base/etc/jetty.xml", mode: "0777", owner: root }
      - { src: subject-c14n.xml, dest: "{{ secure.app_shibbo }}/conf/c14n/subject-c14n.xml", mode: "0777", owner: root }
      - { src: saml-nameid.properties, dest: "{{ secure.app_shibbo }}/conf/saml-nameid.properties", mode: "0777", owner: root }
+     - { src: idp.properties.j2, dest: "{{ secure.shibboleth.conf }}/idp.properties", mode: "0777", owner: root }
 
 
 - name: Configure idp.properties file
@@ -326,14 +327,15 @@
     - { regexp: '^idp.sealer.storePassword=', line: "idp.sealer.storePassword= {{ keystore_password }}" }
     - { regexp: '^idp.sealer.keyPassword=', line: "idp.sealer.keyPassword= {{ keystore_password }}" }
     - { regexp: '^idp.authn.flows=', line: "idp.authn.flows= {{ secure.shibboleth.idp_properties.authn_flows }}" }
-    - { regexp: '^idp.storage.StorageService=', line: "idp.storage.StorageService= org.opensaml.storage.impl.MemoryStorageService" }
-    - { regexp: '^idp.storage.cleanupInterval=', line: "idp.storage.cleanupInterval= PT10M" }
-    - { regexp: '^idp.session.StorageService=', line: "idp.session.StorageService= shibboleth.StorageService" }
-    - { regexp: '^idp.session.slop=', line: "idp.session.slop= 0" }
-    - { regexp: '^idp.session.trackSPSessions=', line: "idp.session.trackSPSessions= true" } 
-    - { regexp: '^idp.status.accessPolicy=', line: "idp.status.accessPolicy= AccessByIPAddress" } 
-    - { regexp: '^idp.resolvertest.accessPolicy=', line: "idp.resolvertest.accessPolicy= AccessByIPAddress" }
-    - { regexp: '^idp.reload.accessPolicy=', line: "idp.reload.accessPolicy= AccessByIPAddress" }
+
+#    - { regexp: '^idp.storage.StorageService=', line: "idp.storage.StorageService= org.opensaml.storage.impl.MemoryStorageService" }
+#    - { regexp: '^idp.storage.cleanupInterval=', line: "idp.storage.cleanupInterval= PT10M" }
+#    - { regexp: '^idp.session.StorageService=', line: "idp.session.StorageService= shibboleth.StorageService" }
+#    - { regexp: '^idp.session.slop=', line: "idp.session.slop= 0" }
+#    - { regexp: '^idp.session.trackSPSessions=', line: "idp.session.trackSPSessions= true" } 
+#    - { regexp: '^idp.status.accessPolicy=', line: "idp.status.accessPolicy= AccessByIPAddress" } 
+#    - { regexp: '^idp.resolvertest.accessPolicy=', line: "idp.resolvertest.accessPolicy= AccessByIPAddress" }
+#    - { regexp: '^idp.reload.accessPolicy=', line: "idp.reload.accessPolicy= AccessByIPAddress" }
     
 
 - name: Makedirectory tree readable

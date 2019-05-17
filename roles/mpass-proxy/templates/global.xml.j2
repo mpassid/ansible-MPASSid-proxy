@@ -12,6 +12,9 @@
        default-init-method="initialize"
        default-destroy-method="destroy">
 
+    <!-- OIDC extension global bean definitions -->
+    <import resource="global-oidc.xml" /> 
+
     <!-- Use this file to define any custom beans needed globally. -->
     <bean id="MPASS.properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">

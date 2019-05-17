@@ -1,19 +1,10 @@
-idp.monitorTest = simulated"><p><a href
-idp.monitorResult = <strong>MPASS-authenticator</strong>: ldap_test
-idp.monitorTestWilma = wilma"><p><a href
-idp.monitorResultWilma = <strong>MPASS-authenticator</strong>: wilma_demo
-idp.monitorTestHyv = hyvinkaa"><p><a href
-idp.monitorResultHyv = <strong>MPASS-authenticator</strong>: azure_hyv
-idp.monitorTestRus = rusko"><p><a href
-idp.monitorResultRus = <strong>MPASS-authenticator</strong>: azure_rusko
-idp.monitorTestHaapavesi = haapavesi"><p><a href
-idp.monitorResultHaapavesi = <strong>MPASS-authenticator</strong>: wilma_haapavesi
-
 # Load any additional property resources from a comma-delimited list
-idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties
+# idp.additionalProperties= /conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties
+idp.additionalProperties=/conf/ldap.properties, /conf/saml-nameid.properties, /conf/services.properties,/conf/authn/duo.properties, /conf/oidc-subject.properties, /conf/idp-oidc.properties
+
 
 # Set the entityID of the IdP
-idp.entityID= {{ secure.shibboleth.idp_properties.entityID }}
+idp.entityID= https://mpass-test.local/idp/shibboleth
 
 # Set the scope used in the attribute resolver for scoped attributes
 idp.scope= localdomain
@@ -25,6 +16,9 @@ idp.scope= localdomain
 #idp.cookie.path =
 #idp.cookie.maxAge = 31536000
 
+# Set the location of user-supplied web flow definitions
+#idp.webflows = %{idp.home}/flows
+
 # Set the location of Velocity view templates
 #idp.views = %{idp.home}/views
 
@@ -34,8 +28,6 @@ idp.scope= localdomain
 #idp.sealer.aliasBase = secret
 idp.sealer.storeResource= %{idp.home}/credentials/sealer.jks
 idp.sealer.versionResource= %{idp.home}/credentials/sealer.kver
-idp.sealer.storePassword=  xxx
-idp.sealer.keyPassword= yyy
 
 # Settings for public/private signing and encryption key(s)
 # During decryption key rollover, point the ".2" properties at a second
@@ -66,16 +58,18 @@ idp.encryption.cert= %{idp.home}/credentials/idp-encryption.crt
 # failure to encrypt won't result in request failure.
 #idp.encryption.optional = false
 
-# Configures the primary server-side storage plugin
-idp.storage.StorageService = org.opensaml.storage.impl.MemoryStorageService
-idp.storage.cleanupInterval = PT10M
+# Configuration of client- and server-side storage plugins
+#idp.storage.cleanupInterval = PT10M
+#idp.storage.htmlLocalStorage = false
 
 # Set to true to expose more detailed errors in responses to SPs
 #idp.errors.detailed = false
-
 # Set to false to skip signing of SAML response messages that signal errors
 #idp.errors.signed = true
-
+# Name of bean containing a list of Java exception classes to ignore
+#idp.errors.excludedExceptions = ExceptionClassListBean
+# Name of bean containing a property set mapping exception names to views
+#idp.errors.exceptionMappings = ExceptionToViewPropertyBean
 # Set if a different default view name for events and exceptions is needed
 #idp.errors.defaultView = error
 
@@ -93,19 +87,20 @@ idp.session.StorageService = shibboleth.StorageService
 # Inactivity timeout
 #idp.session.timeout = PT60M
 # Extra time to store sessions for logout
-idp.session.slop = 0
+#idp.session.slop = PT0S
 # Tolerate storage-related errors
 #idp.session.maskStorageFailure = false
 # Track information about SPs logged into
-idp.session.trackSPSessions = true
+#idp.session.trackSPSessions = false
 # Support lookup by SP for SAML logout
 #idp.session.secondaryServiceIndex = false
 # Length of time to track SP sessions
 #idp.session.defaultSPlifetime = PT2H
 
 # Regular expression matching login flows to enable, e.g. IPAddress|Password
-#idp.authn.flows= Shib|Password|ShibDirect
-idp.authn.flows={{ secure.shibboleth.idp_properties.authn_flows }}
+
+
+
 # Regular expression of forced "initial" methods when no session exists,
 # usually in conjunction with the idp.authn.resolveAttribute property below.
 #idp.authn.flows.initial = Password
@@ -141,9 +136,10 @@ idp.authn.flows={{ secure.shibboleth.idp_properties.authn_flows }}
 
 # Whether attribute values and terms of use text are compared
 #idp.consent.compareValues = false
-# Maximum number of consent storage records
-# Set to -1 for unlimited server-side storage
+# Maximum number of consent records for space-limited storage (e.g. cookies)
 #idp.consent.maxStoredRecords = 10
+# Maximum number of consent records for larger/server-side storage (0 = no limit)
+#idp.consent.expandedMaxStoredRecords = 0
 
 # Time in milliseconds to expire consent storage records.
 #idp.consent.storageRecordLifetime = P1Y
@@ -152,19 +148,22 @@ idp.authn.flows={{ secure.shibboleth.idp_properties.authn_flows }}
 # for use by user interface logic; adds overhead so off by default.
 #idp.logout.elaboration = false
 
+# Whether to require logout requests be signed/authenticated.
+#idp.logout.authenticated = true
+
 # Message freshness and replay cache tuning
 #idp.policy.messageLifetime = PT3M
 #idp.policy.clockSkew = PT3M
 
 # Set to custom bean for alternate storage of replay cache
-#idp.replayCache.StorageService = shibboleth.StorageService
+idp.replayCache.StorageService = shibboleth.StorageService
 
+# Toggles whether to allow outbound messages via SAML artifact
+#idp.artifact.enabled = true
 # Suppresses typical signing/encryption when artifact binding used
 #idp.artifact.secureChannel = true
-
 # May differ to direct SAML 2 artifact lookups to specific server nodes
 #idp.artifact.endpointIndex = 2
-
 # Set to custom bean for alternate storage of artifact map state
 #idp.artifact.StorageService = shibboleth.StorageService
 
@@ -183,3 +182,15 @@ idp.ui.fallbackLanguages= en,fr,de
 # NOTE that idp.session.StorageService requires server-side storage
 # when CAS protocol is enabled
 #idp.cas.StorageService=shibboleth.StorageService
+
+# CAS service registry implementation class
+#idp.cas.serviceRegistryClass=net.shibboleth.idp.cas.service.PatternServiceRegistry
+
+# Profile flows in which the ProfileRequestContext should be exposed
+# in servlet request under the key "opensamlProfileRequestContext"
+#idp.profile.exposeProfileRequestContextInServletRequest = SAML2/POST/SSO,SAML2/Redirect/SSO
+
+# F-TICKS auditing - set salt to include hashed username
+#idp.fticks.federation=MyFederation
+#idp.fticks.algorithm=SHA-256
+#idp.fticks.salt=somethingsecret
