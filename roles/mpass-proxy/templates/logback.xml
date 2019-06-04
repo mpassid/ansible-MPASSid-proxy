@@ -1,27 +1,29 @@
-{% raw %}<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
     <!-- Logs IdP, but not OpenSAML, messages -->
     <logger name="net.shibboleth.idp" level="WARN"/>
+    <logger name="org.geant" level="DEBUG"/>
     <!-- Logs IdP, but not OpenSAML, messages -->
-    <logger name="fi.mpass. level="WARN"/>
-    <logger name="fi.mpass.shibboleth.authn.impl.PopulateDiscoveryContext" level="ALL"/>
-    <logger name="fi.mpass.shibboleth.profile.impl.BuildAuthnSourceRestResponse" level="ALL"/>
-    <logger name="fi.mpass.shibboleth.profile.impl.BuildAuthnTagsRestResponse" level="ALL"/>
-    <logger name="fi.mpass.shibboleth.profile.impl.BuildMetaRestResponse" level="ALL"/>
+    <logger name="fi.okm.mpass" level="WARN"/>
+    <logger name="fi.okm.mpass.shibboleth.authn.impl.PopulateDiscoveryContext" level="DEBUG"/>
+    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildAuthnSourceRestResponse" level="DEBUG"/>
+    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildAuthnTagsRestResponse" level="DEBUG"/>
+    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildMetaRestResponse" level="DEBUG"/>
+    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildServiceRestResponse" level="DEBUG"/>
 
-    <logger name="fi.mpass.shibboleth.monitor.ContentContainsResponseValidator" level="ALL"/>
-<!--    <logger name="fi.mpass.shibboleth.profile.impl.StoreMonitoringResult" level="ALL"/>-->
-<!--    <logger name="fi.mpass. level="ALL"/>-->
-<!--    <logger name="fi.mpass.shibboleth.monitor.BaseSequenceStepResolver" level="ALL"/>-->
-    <logger name="fi.mpass.shibboleth.attribute.resolver.dc.impl.RestDataConnector" level="INFO"/>
-<!--    <logger name="fi.mpass.shibboleth.profile.impl.BuildMetaRestResponse" level="ALL"/>
-    <logger name="fi.mpass.shibboleth.profile.impl.BuildServiceRestResponse" level="ALL"/>
-    <logger name="fi.mpass.shibboleth.profile.metadata" level="ALL"/>
-    <logger name="fi.mpass.shibboleth.authn.impl.ExtractShibbolethAttributesFromRequest" level="ALL"/>
-    <logger name="fi.mpass.shibboleth.authn.impl.ShibbolethSpAuthnServlet" level="ALL"/>-->
-<!--    <logger name="fi.mpass.shibboleth.authn.impl" level="DEBUG" />-->
-<!--    <logger name="fi.mpass.shibboleth.monitor" level="ALL"/>-->
+    <logger name="fi.okm.mpass.shibboleth.monitor.ContentContainsResponseValidator" level="DEBUG"/>
+<!--    <logger name="fi.okm.mpass.shibboleth.profile.impl.StoreMonitoringResult" level="DEBUG"/>-->
+<!--    <logger name="fi.okm.mpass" level="DEBUG"/>-->
+ <!--   <logger name="fi.okm.mpass.shibboleth.monitor.BaseSequenceStepResolver" level="DEBUG"/> -->
+    <logger name="fi.okm.mpass.shibboleth.attribute.resolver.dc.impl.RestDataConnector" level="INFO"/>
+<!--    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildMetaRestResponse" level="DEBUG"/>
+    <logger name="fi.okm.mpass.shibboleth.profile.impl.BuildServiceRestResponse" level="DEBUG"/>
+    <logger name="fi.okm.mpass.shibboleth.profile.metadata" level="DEBUG"/>
+    <logger name="fi.okm.mpass.shibboleth.authn.impl.ExtractShibbolethAttributesFromRequest" level="DEBUG"/>
+    <logger name="fi.okm.mpass.shibboleth.authn.impl.ShibbolethSpAuthnServlet" level="DEBUG"/>-->
+<!--    <logger name="fi.okm.mpass.shibboleth.authn.impl" level="DEBUG" />-->
+<!--    <logger name="fi.okm.mpass.shibboleth.monitor" level="DEBUG"/>-->
     <!-- Logs OpenSAML, but not IdP, messages -->
     <logger name="org.opensaml.saml" level="INFO"/>
 
@@ -91,6 +93,13 @@
        <SuffixPattern>[%logger:%line] %msg|%mdc{idp.jsessionid}</SuffixPattern>
     </appender>
     
+  <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+      <destination>86.50.170.243:4560</destination>
+
+      <!-- encoder is required -->
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+  </appender>
+
     <!-- Audit log. -->
     <appender name="IDP_AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${idp.home}/logs/idp-audit.log</File>
@@ -121,19 +130,19 @@
         </encoder>
     </appender>
 
-    <logger name="Shibboleth-Audit" level="ALL">
+    <logger name="Shibboleth-Audit" level="DEBUG">
         <appender-ref ref="IDP_AUDIT"/>
+        <appender-ref ref="stash"/>
     </logger>
 
-    <logger name="Shibboleth-Consent-Audit" level="ALL">
+    <logger name="Shibboleth-Consent-Audit" level="DEBUG">
         <appender-ref ref="IDP_CONSENT_AUDIT"/>
     </logger>
     
     <root level="INFO">
         <appender-ref ref="IDP_PROCESS"/>
-        <appender-ref ref="IDP_SYSLOG"/>
+        <appender-ref ref="stash"/>
         <appender-ref ref="IDP_WARN" />
     </root>
 
 </configuration>
-{% endraw %}
